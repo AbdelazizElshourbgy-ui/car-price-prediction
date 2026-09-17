@@ -1,122 +1,142 @@
-# 🚗 Car Sales Intelligence Dashboard
-
-An interactive Streamlit dashboard for used-car price analysis and machine-learning prediction,
-wrapped in a dark, neon-themed multi-page app. It includes the dataset cleaning pipeline,
-10 visualizations, five trained regression models, live price prediction, and a generated report.
-
-## Dashboard Preview
+# 🚗 Smart Car Price Prediction
 
 ![Car Price Prediction Dashboard](assets/readme_home.png)
 
-## Pages
+<p align="center">
+  <b>Machine Learning Dashboard for Car Price Prediction</b>
+</p>
 
-| Page | What it shows |
-|---|---|
-| **Home** | Hero image + icon navigation to every section |
-| **📊 KPI Overview** | Headline metrics + 4 of the 10 charts |
-| **🚗 Car Analysis** | The remaining 6 charts |
-| **📋 Data Description** | Step-by-step explanation of the cleaning pipeline, with live before/after stats |
-| **🤖 ML Models** | Best model, full metric comparison, Train vs Test R² (overfitting check) |
-| **🔮 Predict Price** | Fill in a car's details, get a live price prediction + error range |
-| **📄 Report** | Auto-composed written summary, downloadable as Markdown / PDF |
+<p align="center">
+  An interactive Streamlit application for exploring car data, analyzing market trends, training machine learning models, and predicting car prices.
+</p>
 
-## Quick start
+<p align="center">
+  <a href="https://smart-car-pricing.streamlit.app/">
+    <strong>🚀 Live Demo</strong>
+  </a>
+</p>
 
-```bash
-pip install -r requirements.txt
-streamlit run Home.py
-```
+---
 
-`data/raw_vehicle_sales.csv` already contains the real `VehicleSales.csv`
-dataset (548,434 cleaned rows after the pipeline runs), and
-`data/vehicle_sales_clean.csv` / `models/*.joblib` are pre-built from it, so
-the app loads instantly — no synthetic data, no first-run wait.
+## 📌 Overview
 
-If you ever need to rebuild from scratch (e.g. after editing the cleaning or
-training logic, or swapping in a newer export):
-1. Delete `data/vehicle_sales_clean.csv` and everything under `models/`.
-2. Run `streamlit run Home.py` — the cleaning pipeline
-   (`data_prep/clean_pipeline.py`) and the training pipeline
-   (`data_prep/train_models.py`) will run automatically against
-   `data/raw_vehicle_sales.csv` and re-cache their output.
+**Smart Car Price Prediction** is an interactive machine learning dashboard built with **Python** and **Streamlit**.
 
-To point the app at a *different* export later, just overwrite
-`data/raw_vehicle_sales.csv` with a CSV that has these columns: `Id, VIN,
-Year, Make, Model, Trim, Body, Transmission, State, ConditionValue, Odometer,
-Color, Interior, Seller, MMR, SellingPrice, SaleDate`, then do the delete +
-rerun above.
+The project combines data analysis, visualization, machine learning, and price prediction into a single dashboard. Users can explore the dataset, analyze car characteristics, compare machine learning models, and estimate car prices through an easy-to-use interface.
 
-**Note on models/**: this repo ships five trained models — `XGBoost`, `LightGBM`,
-`Random Forest (Best)`, `Decision Tree`, and `Linear Regression` — together with
-the preprocessor and `models/results.csv`. The metrics shown in the app are the
-saved results from these trained models.
+---
 
+## ✨ Features
 
-## Project structure
+- 📊 Interactive KPI dashboard
+- 🚘 Detailed car market analysis
+- 📋 Dataset description and exploration
+- 🤖 Machine learning model comparison
+- 💰 Interactive car price prediction
+- 📑 Automated project report
+- 📈 Visual charts and performance metrics
+- 🎨 Clean and interactive Streamlit interface
 
-```
-Home.py                          # Landing page (hero + icon navigation)
-pages/
-  1_KPI_Overview.py
-  2_Car_Analysis.py
-  3_Data_Description.py
-  4_ML_Models.py
-  5_Predict_Price.py
-  6_Report.py
-utils/
-  theme.py                       # Colors, CSS, hero banner
-  data_loader.py                 # Cached CSV loading (auto-generates on first run)
-  charts.py                      # The 10 Plotly chart builders
-  ml_utils.py                    # Cached model loading/training (Streamlit layer)
-  inference.py                   # Pure-Python feature-building for live predictions
-data_prep/
-  generate_synthetic_data.py     # No longer used by the app; kept for reference
-  clean_pipeline.py              # Cleaning logic, ported from the notebook
-  train_models.py                # Encoding + training + comparison, ported from the notebook
-data/                            # raw_vehicle_sales.csv (real data) + generated clean CSV
-models/                          # Generated .joblib models + results.csv
-assets/hero_car.jpg              # Home page hero image
-assets/readme_home.png          # README dashboard preview
-```
+---
 
-## Notes
+## 🖥️ Dashboard Pages
 
-- Model hyperparameters in `train_models.py` are fixed (not grid-searched) so
-  training stays fast inside the app. The notebook's `RandomizedSearchCV`
-  blocks for Decision Tree / Random Forest can be dropped back in if you want
-  the tuned versions — just replace the relevant model definitions.
-- `XGBoost` and `LightGBM` are included in `requirements.txt` and are part of the
-  shipped five-model comparison. If you rebuild the models, make sure both
-  packages are installed first.
-- The "Predict Price" error range is the model's typical error (± test-set
-  MAE, converted from the log-price scale back to dollars) — it's a simple,
-  interpretable proxy for uncertainty, not a formal confidence interval.
+| Page | Description |
+|------|-------------|
+| 📊 **KPI Overview** | Main dashboard with key statistics and market insights |
+| 🚘 **Car Analysis** | Explore car prices and different vehicle characteristics |
+| 📋 **Data Description** | Dataset structure, features, and descriptive statistics |
+| 🤖 **ML Models** | Compare machine learning models and their performance |
+| 💰 **Predict Price** | Enter car specifications and estimate the expected price |
+| 📑 **Report** | Generate a complete project report |
 
-## Navigation (fixed)
+---
 
-The top navigation bar is rendered by a single shared helper,
-`utils.theme.render_topbar(active=...)`, and is called on **every** page.
+## 🤖 Machine Learning Models
 
-Streamlit strips the numeric ordering prefix from files in `pages/`, so
-`pages/1_KPI_Overview.py` is served at `/KPI_Overview`, not `/1_KPI_Overview`.
-Linking to the numbered file name was what caused the "Page not found" errors.
-All nav links now use the correct, relative slugs:
+The project evaluates several regression models for car price prediction:
 
-| Nav item     | Page file                     | URL                 |
-|--------------|-------------------------------|---------------------|
-| Home         | `Home.py`                     | `/`                 |
-| EDA          | `pages/1_KPI_Overview.py`     | `/KPI_Overview`     |
-| Car Analysis | `pages/2_Car_Analysis.py`     | `/Car_Analysis`     |
-| Description  | `pages/3_Data_Description.py` | `/Data_Description` |
-| Predict Price| `pages/5_Predict_Price.py`    | `/Predict_Price`    |
-| Report       | `pages/6_Report.py`           | `/Report`           |
-| ML Models    | `pages/4_ML_Models.py`        | `/ML_Models`        |
+- **XGBoost**
+- **LightGBM**
+- **Random Forest**
+- **Decision Tree**
+- **Linear Regression**
 
+### Model Performance
 
+| Model | Train R² | Train MAE | Train RMSE | Test R² | Test MAE | Test RMSE |
+|------|---------:|----------:|-----------:|--------:|---------:|----------:|
+| **XGBoost** | 0.934811 | 0.148137 | 0.232283 | 0.928308 | 0.152985 | 0.242901 |
+| **LightGBM** | 0.928567 | 0.153774 | 0.243153 | 0.925363 | 0.156129 | 0.247838 |
+| **Random Forest** | 0.899148 | 0.192364 | 0.288916 | 0.884367 | 0.202831 | 0.308485 |
+| **Decision Tree** | 0.912052 | 0.166113 | 0.269800 | 0.879025 | 0.192294 | 0.315529 |
+| **Linear Regression** | 0.802038 | 0.288921 | 0.404781 | 0.799452 | 0.289783 | 0.406258 |
 
-## 👨‍💻 Author
+---
 
-**Abdelaziz Elshourbgy**
+## 🛠️ Tech Stack
 
-- GitHub: [AbdelazizElshourbgy-ui](https://github.com/AbdelazizElshourbgy-ui)
-- LinkedIn: [abdelaziz-elshourbgy](https://www.linkedin.com/in/abdelaziz-elshourbgy-b126a83a2/)
+### Programming
+- Python
+
+### Data Science & Machine Learning
+- Pandas
+- NumPy
+- Scikit-learn
+- XGBoost
+- LightGBM
+
+### Visualization
+- Plotly
+
+### Application
+- Streamlit
+
+### Reporting
+- FPDF
+
+---
+
+## 📂 Project Structure
+
+```text
+car-price-prediction/
+│
+├── assets/
+│   └── hero_car.jpg
+│
+├── data/
+│   └── .gitkeep
+│
+├── data_prep/
+│   ├── __init__.py
+│   ├── clean_pipeline.py
+│   ├── generate_synthetic_data.py
+│   └── train_models.py
+│
+├── docs/
+│   └── screenshots/
+│       └── home_preview.png
+│
+├── models/
+│   └── .gitkeep
+│
+├── pages/
+│   ├── 1_KPI_Overview.py
+│   ├── 2_Car_Analysis.py
+│   ├── 3_Data_Description.py
+│   ├── 4_ML_Models.py
+│   ├── 5_Predict_Price.py
+│   └── 6_Report.py
+│
+├── utils/
+│   ├── __init__.py
+│   ├── charts.py
+│   ├── data_loader.py
+│   ├── inference.py
+│   ├── ml_utils.py
+│   └── theme.py
+│
+├── Home.py
+├── README.md
+└── requirements.txt
