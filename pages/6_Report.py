@@ -1,6 +1,4 @@
 import datetime
-import re
-
 import streamlit as st
 
 from utils.theme import render_topbar, apply_page_style
@@ -8,9 +6,9 @@ from utils.data_loader import load_raw_data, load_clean_data
 from utils.ml_utils import load_models_and_results, best_model_name
 
 
-# ---------------------------------------------------------------------------
-# Page setup
-# ---------------------------------------------------------------------------
+# ============================================================
+# PAGE SETUP
+# ============================================================
 
 apply_page_style("Report", page_icon="📄")
 
@@ -25,9 +23,9 @@ st.markdown(
 )
 
 
-# ---------------------------------------------------------------------------
-# Load data
-# ---------------------------------------------------------------------------
+# ============================================================
+# LOAD DATA
+# ============================================================
 
 raw = load_raw_data()
 df = load_clean_data()
@@ -37,9 +35,9 @@ best_name = best_model_name(results_df)
 best_row = results_df[results_df["Model"] == best_name].iloc[0]
 
 
-# ---------------------------------------------------------------------------
-# Report statistics
-# ---------------------------------------------------------------------------
+# ============================================================
+# CALCULATED METRICS
+# ============================================================
 
 top_brand = df["Make"].value_counts().idxmax()
 top_brand_share = df["Make"].value_counts(normalize=True).max() * 100
@@ -61,9 +59,9 @@ low_month = monthly.idxmin()
 generated_on = datetime.date.today().strftime("%Y-%m-%d")
 
 
-# ---------------------------------------------------------------------------
-# On-screen report
-# ---------------------------------------------------------------------------
+# ============================================================
+# ON-SCREEN REPORT
+# ============================================================
 
 st.markdown("## 1. Executive Summary")
 
@@ -97,7 +95,7 @@ st.write(
     f"Of the **{len(raw):,}** raw records, **{len(raw) - len(df):,}** were removed "
     f"(missing Make/Model or VIN). Remaining gaps in Body, Transmission, Condition, "
     f"Odometer, Color, Interior, MMR, SellingPrice, and SaleDate were imputed using "
-    f"Make/Model-level medians and modes - see the **Data Description** page for the "
+    f"Make/Model-level medians and modes — see the **Data Description** page for the "
     f"full step-by-step breakdown."
 )
 
@@ -106,13 +104,14 @@ st.markdown("## 4. Model Performance")
 
 st.dataframe(
     results_df,
-    use_container_width=True,
+    use_container_width=True
 )
 
 st.write(
-    f"**{best_name}** is the best model by Test R2 "
+    f"**{best_name}** is the best model by Test R² "
     f"(**{best_row['Test_R2']:.3f}**), with a test MAE of "
-    f"**{best_row['Test_MAE']:.3f}** and RMSE of **{best_row['Test_RMSE']:.3f}** "
+    f"**{best_row['Test_MAE']:.3f}** and RMSE of "
+    f"**{best_row['Test_RMSE']:.3f}** "
     f"on the log-price scale."
 )
 
@@ -127,7 +126,7 @@ st.write(
     f"- **{top_brand.title()}** dominates sales volume; average price varies "
     f"meaningfully by brand and body type (see **Car Analysis**).\n"
     f"- Tree-based/boosted models capture non-linear pricing effects that plain "
-    f"linear regression misses - compare Train vs Test R2 on the **ML Models** page "
+    f"linear regression misses — compare Train vs Test R² on the **ML Models** page "
     f"to check for overfitting before deploying any single model."
 )
 
@@ -135,22 +134,22 @@ st.write(
 st.markdown("---")
 
 
-# ---------------------------------------------------------------------------
-# Markdown report
-# ---------------------------------------------------------------------------
+# ============================================================
+# MARKDOWN REPORT
+# ============================================================
 
 def build_markdown_report() -> str:
 
     lines = [
-        "# Car Sales Intelligence - Project Report",
+        "# Car Sales Intelligence — Project Report",
         f"*Generated on {generated_on}*",
         "",
         "## 1. Executive Summary",
         f"{len(df):,} cleaned records ({len(raw):,} raw) covering "
-        f"{df['SaleDate'].dt.year.min()}-{df['SaleDate'].dt.year.max()}. "
+        f"{df['SaleDate'].dt.year.min()}–{df['SaleDate'].dt.year.max()}. "
         f"Average selling price ${avg_price:,.0f} ({price_vs_mmr:+.1f}% vs average MMR "
         f"${avg_mmr:,.0f}). Best model: **{best_name}** "
-        f"(Test R2 {best_row['Test_R2']:.3f}).",
+        f"(Test R² {best_row['Test_R2']:.3f}).",
         "",
         "## 2. Dataset Overview",
         f"- Records: {len(df):,}",
@@ -188,7 +187,7 @@ def build_markdown_report() -> str:
     lines += [
         "",
         f"Best model: **{best_name}** "
-        f"(Test R2 {best_row['Test_R2']:.3f}, "
+        f"(Test R² {best_row['Test_R2']:.3f}, "
         f"Test MAE {best_row['Test_MAE']:.3f}, "
         f"Test RMSE {best_row['Test_RMSE']:.3f}).",
         "",
@@ -196,23 +195,22 @@ def build_markdown_report() -> str:
         "- Selling price tracks MMR closely; MMR is the strongest single price signal.",
         "- Car age and odometer both correlate negatively with price.",
         f"- {top_brand.title()} dominates sales volume; price varies by brand and body type.",
-        "- Compare Train vs Test R2 before deploying any single model, to check for overfitting.",
+        "- Compare Train vs Test R² before deploying any single model, to check for overfitting.",
     ]
 
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------------------
-# Unicode cleanup for PDF
-# ---------------------------------------------------------------------------
+# ============================================================
+# PDF HELPERS
+# ============================================================
 
 def sanitize_for_pdf(text: str) -> str:
     """
-    Convert Unicode characters that are not supported by FPDF core fonts
-    into ASCII equivalents.
+    Convert Unicode characters that Helvetica/core PDF fonts
+    cannot handle into safe Latin-1 characters.
 
-    This allows the PDF to work with Helvetica without requiring
-    any external TTF/OTF font file.
+    No external font is required.
     """
 
     replacements = {
@@ -221,108 +219,176 @@ def sanitize_for_pdf(text: str) -> str:
         "\u2014": "-",   # em dash
         "\u2012": "-",   # figure dash
         "\u2010": "-",   # hyphen
-        "\u2212": "-",   # mathematical minus
+        "\u2212": "-",   # minus sign
 
         # Quotes
         "\u2018": "'",
         "\u2019": "'",
+        "\u201a": "'",
         "\u201c": '"',
         "\u201d": '"',
+        "\u201e": '"',
 
-        # Mathematical / special symbols
-        "\u00b2": "2",    # superscript 2
-        "\u00b3": "3",    # superscript 3
+        # Math / symbols
+        "\u00b2": "2",
+        "\u00b3": "3",
         "\u00b9": "1",
-        "\u2192": "->",   # right arrow
-        "\u2190": "<-",   # left arrow
+        "\u2192": "->",
+        "\u2190": "<-",
+        "\u2194": "<->",
         "\u2264": "<=",
         "\u2265": ">=",
+        "\u2260": "!=",
         "\u00d7": "x",
         "\u00b1": "+/-",
 
-        # Bullet
+        # Bullets and dots
         "\u2022": "-",
-
-        # Ellipsis
+        "\u2023": "-",
+        "\u2043": "-",
         "\u2026": "...",
 
-        # Non-breaking space
+        # Spaces
         "\u00a0": " ",
+        "\t": "    ",
     }
 
     for old, new in replacements.items():
         text = text.replace(old, new)
 
-    # Remove any remaining characters that cannot be represented
-    # by the Latin-1 encoding used by FPDF core fonts.
+    # Final safety conversion.
+    # Helvetica is a Latin-1/core font.
     text = text.encode("latin-1", errors="replace").decode("latin-1")
 
     return text
 
 
-# ---------------------------------------------------------------------------
-# PDF report
-# ---------------------------------------------------------------------------
-
 def build_pdf_report(markdown_text: str) -> bytes:
     """
-    Build PDF using only FPDF core fonts.
+    Build a PDF using only FPDF core fonts.
 
-    No external font file is required.
+    No external .ttf/.otf font is required.
     """
 
     from fpdf import FPDF
 
     pdf = FPDF()
 
-    pdf.set_auto_page_break(
-        auto=True,
-        margin=15,
-    )
-
+    # Page configuration
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.set_margins(15, 15, 15)
     pdf.add_page()
 
-    # Helvetica is built into FPDF and requires no external font.
-    pdf.set_font(
-        "Helvetica",
-        size=11,
+    # Core PDF font - no external font needed
+    pdf.set_font("Helvetica", size=10)
+
+    # Available page width
+    available_width = (
+        pdf.w
+        - pdf.l_margin
+        - pdf.r_margin
     )
 
-    for raw_line in markdown_text.split("\n"):
+    # Process every Markdown line
+    for raw_line in markdown_text.splitlines():
 
-        # Remove Markdown formatting.
-        line = raw_line
+        # Remove Markdown formatting
+        line = (
+            raw_line
+            .replace("**", "")
+            .replace("*", "")
+            .replace("###", "")
+            .replace("##", "")
+            .replace("#", "")
+        )
 
-        line = line.replace("**", "")
-        line = line.replace("*", "")
-        line = line.replace("#", "")
-        line = line.replace("|", " ")
+        # Turn Markdown table separators into normal text
+        line = line.replace("|", " | ")
 
-        # Convert unsupported Unicode characters to ASCII.
+        # Remove/replace unsupported Unicode
         line = sanitize_for_pdf(line)
 
+        # Empty line
         if not line.strip():
             pdf.ln(3)
             continue
 
-        pdf.multi_cell(
-            0,
-            6,
-            line,
-        )
+        # ----------------------------------------------------
+        # IMPORTANT:
+        # Split very long strings manually.
+        # This prevents:
+        #
+        # "Not enough horizontal space to render a single character"
+        # ----------------------------------------------------
 
-    # fpdf2 returns bytes when output() is called without a destination.
+        max_chars = 80
+
+        if len(line) > max_chars:
+
+            chunks = [
+                line[i:i + max_chars]
+                for i in range(0, len(line), max_chars)
+            ]
+
+            for chunk in chunks:
+
+                chunk = chunk.strip()
+
+                if not chunk:
+                    continue
+
+                try:
+                    # Newer fpdf2
+                    pdf.multi_cell(
+                        w=available_width,
+                        h=6,
+                        text=chunk,
+                        wrapmode="CHAR",
+                    )
+
+                except TypeError:
+                    # Compatibility with older fpdf2
+                    pdf.multi_cell(
+                        available_width,
+                        6,
+                        chunk,
+                    )
+
+        else:
+
+            try:
+                # Newer fpdf2
+                pdf.multi_cell(
+                    w=available_width,
+                    h=6,
+                    text=line,
+                    wrapmode="CHAR",
+                )
+
+            except TypeError:
+                # Compatibility with older fpdf2
+                pdf.multi_cell(
+                    available_width,
+                    6,
+                    line,
+                )
+
+    # Return PDF bytes
     return bytes(pdf.output())
 
 
-# ---------------------------------------------------------------------------
-# Downloads
-# ---------------------------------------------------------------------------
+# ============================================================
+# DOWNLOADS
+# ============================================================
 
 md_report = build_markdown_report()
 
 dl1, dl2 = st.columns(2)
 
+
+# ------------------------------------------------------------
+# MARKDOWN DOWNLOAD
+# ------------------------------------------------------------
 
 with dl1:
 
@@ -334,6 +400,10 @@ with dl1:
         use_container_width=True,
     )
 
+
+# ------------------------------------------------------------
+# PDF DOWNLOAD
+# ------------------------------------------------------------
 
 with dl2:
 
@@ -352,7 +422,7 @@ with dl2:
     except ImportError:
 
         st.button(
-            "⬇️ Download report (PDF) - install `fpdf2`",
+            "⬇️ Download report (PDF) — install `fpdf2`",
             disabled=True,
             use_container_width=True,
         )
@@ -360,5 +430,5 @@ with dl2:
     except Exception as e:
 
         st.error(
-            f"Could not generate PDF report: {e}"
+            f"Could not generate PDF report: {str(e)}"
         )
