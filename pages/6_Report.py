@@ -7,13 +7,7 @@
 </p>
 
 <p align="center">
-  An interactive Streamlit application for car data analysis, machine learning, and price prediction.
-</p>
-
-<p align="center">
-  <a href="https://smart-car-pricing.streamlit.app/">
-    🚀 Live Demo
-  </a>
+  An interactive Streamlit application for car market analysis, machine learning model evaluation, and car price prediction.
 </p>
 
 ---
@@ -22,20 +16,27 @@
 
 **Smart Car Price Prediction** is an interactive machine learning dashboard built with **Python** and **Streamlit**.
 
-The project combines data analysis, visualization, machine learning model comparison, and car price prediction in one simple and interactive application.
+The application brings together **data analysis, visualization, machine learning, model comparison, and interactive price prediction** in a single user-friendly dashboard.
+
+Users can explore the car dataset, analyze market trends, compare regression models, evaluate their performance, and predict the estimated price of a vehicle based on its specifications.
+
+### 🚀 Live Demo
+
+https://smart-car-pricing.streamlit.app/
 
 ---
 
 ## ✨ Features
 
-- 📊 Interactive KPI dashboard
-- 🚘 Car market analysis
-- 📋 Dataset exploration and description
-- 🤖 Machine learning model comparison
-- 💰 Interactive car price prediction
-- 📈 Model performance evaluation
-- 📑 Automated project report
-- 🎨 Interactive Streamlit interface
+- 📊 **Interactive KPI Dashboard**
+- 🚘 **Car Market Analysis**
+- 📋 **Dataset Exploration & Statistics**
+- 🤖 **Machine Learning Model Comparison**
+- 💰 **Interactive Car Price Prediction**
+- 📈 **Model Performance Evaluation**
+- 📑 **Automated Project Report**
+- 🎨 **Interactive Streamlit Interface**
+- 📉 **Data Visualization with Plotly**
 
 ---
 
@@ -43,26 +44,26 @@ The project combines data analysis, visualization, machine learning model compar
 
 | Page | Description |
 |------|-------------|
-| 📊 **KPI Overview** | View the main statistics and key market insights |
-| 🚘 **Car Analysis** | Analyze car prices and vehicle characteristics |
-| 📋 **Data Description** | Explore dataset structure and statistics |
-| 🤖 **ML Models** | Compare machine learning models and performance |
-| 💰 **Predict Price** | Predict a car price using its specifications |
-| 📑 **Report** | Generate and download a project report |
+| 📊 **KPI Overview** | View key statistics and important car market insights |
+| 🚘 **Car Analysis** | Analyze car prices, brands, categories, and vehicle characteristics |
+| 📋 **Data Description** | Explore the dataset structure, features, and statistical information |
+| 🤖 **ML Models** | Compare machine learning models and their performance |
+| 💰 **Predict Price** | Estimate a car's price using its specifications |
+| 📑 **Report** | Generate and download an automated project report |
 
 ---
 
-## 🤖 Machine Learning Models
+## 🤖 Machine Learning
 
-The project uses several regression models for car price prediction:
+The project uses several regression algorithms to predict car prices:
 
-- XGBoost
-- LightGBM
-- Random Forest
-- Decision Tree
-- Linear Regression
+- **XGBoost**
+- **LightGBM**
+- **Random Forest**
+- **Decision Tree**
+- **Linear Regression**
 
-### Model Performance
+### 📊 Model Performance
 
 | Model | Train R² | Train MAE | Train RMSE | Test R² | Test MAE | Test RMSE |
 |------|---------:|----------:|-----------:|--------:|---------:|----------:|
@@ -72,38 +73,45 @@ The project uses several regression models for car price prediction:
 | **Decision Tree** | 0.912052 | 0.166113 | 0.269800 | 0.879025 | 0.192294 | 0.315529 |
 | **Linear Regression** | 0.802038 | 0.288921 | 0.404781 | 0.799452 | 0.289783 | 0.406258 |
 
+### 📌 Evaluation Metrics
+
+- **R² Score:** Measures how well the model explains the variation in car prices.
+- **MAE:** Measures the average absolute prediction error.
+- **RMSE:** Measures the square root of the average squared prediction error.
+
 ---
 
 ## 🛠️ Tech Stack
 
-### Programming Language
+### 💻 Programming
 - Python
 
-### Data Science & Machine Learning
+### 📊 Data Science & Machine Learning
 - Pandas
 - NumPy
 - Scikit-learn
 - XGBoost
 - LightGBM
 
-### Visualization
+### 📈 Visualization
 - Plotly
 
-### Application
+### 🌐 Application
 - Streamlit
 
-### Reporting
+### 📑 Reporting
 - FPDF
 
 ---
 
 ## 📂 Project Structure
 
-~~~text
+```text
 car-price-prediction/
 │
 ├── assets/
-│   └── hero_car.jpg
+│   ├── hero_car.jpg
+│   └── readme_home.png
 │
 ├── data/
 │   └── .gitkeep
@@ -140,20 +148,3 @@ car-price-prediction/
 ├── Home.py
 ├── README.md
 └── requirements.txt
-
----      
-      
-## 👨‍💻 Author
-
-**Abdelaziz Elshourbgy**
-
-- GitHub: [AbdelazizElshourbgy-ui](https://github.com/AbdelazizElshourbgy-ui)
-- LinkedIn: [abdelaziz-elshourbgy](https://www.linkedin.com/in/abdelaziz-elshourbgy-b126a83a2/)
-      
-
-      
-
-
-      
-
-                                    
