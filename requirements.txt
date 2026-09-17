@@ -1,0 +1,14 @@
+streamlit>=1.37
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+plotly>=5.18
+xgboost>=2.0
+lightgbm>=4.1
+joblib>=1.3
+fpdf2>=2.7
+matplotlib>=3.7
+
+# Optional — only needed if you swap the synthetic data generator for a real
+# SQL Server connection (see data_prep/generate_synthetic_data.py):
+# pyodbc>=5.0
